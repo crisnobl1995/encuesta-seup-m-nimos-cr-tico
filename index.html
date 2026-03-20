@@ -1423,6 +1423,12 @@
 </main>
 
 <script>
+  // ══════════════════════════════════════════════════════════════
+  // CONFIGURACIÓN — Pega aquí tu URL de Google Apps Script
+  // (ver instrucciones en el archivo README_CONFIGURACION.txt)
+  // ══════════════════════════════════════════════════════════════
+  const SHEETS_URL = 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT';
+
   let currentSection = 0;
   const totalSections = 9;
 
@@ -1461,48 +1467,57 @@
     if (currentSection > 0) goTo(currentSection - 1);
   }
 
-  // ── COLLECT SURVEY DATA ──────────────────────────────────────
+  // ── RECOGER DATOS ─────────────────────────────────────────────
   function collectData() {
     const hospital = document.getElementById('hospitalName').value || 'Sin nombre';
-    const ccaa = document.getElementById('ccaa').value || '';
-    const tipo = document.getElementById('tipoCentro').value || '';
-    const volumen = document.getElementById('volumen') ? document.getElementById('volumen').value : '';
-    const ucip = document.getElementById('ucip') ? document.getElementById('ucip').value : '';
+    const ccaa     = document.getElementById('ccaa').value || '';
+    const tipo     = document.getElementById('tipoCentro').value || '';
+    const volumen  = document.getElementById('volumen').value || '';
+    const ucip     = document.getElementById('ucip').value || '';
 
     const responses = {};
     document.querySelectorAll('.triple-check').forEach(tc => {
       const checked = tc.querySelector('input[type="radio"]:checked');
-      if (checked) {
-        responses[checked.name] = checked.value;
-      }
+      if (checked) responses[checked.name] = checked.value;
     });
 
-    return {
-      hospital, ccaa, tipo, volumen, ucip,
-      timestamp: new Date().toISOString(),
-      responses
-    };
+    return { hospital, ccaa, tipo, volumen, ucip, timestamp: new Date().toISOString(), responses };
   }
 
-  // ── SUBMIT ────────────────────────────────────────────────────
+  // ── ENVIAR A GOOGLE SHEETS ────────────────────────────────────
   async function submitSurvey() {
     const data = collectData();
     const status = document.getElementById('saveStatus');
     status.style.display = 'inline-flex';
     status.className = 'save-status saving';
-    status.textContent = '💾 Guardando...';
+    status.textContent = '💾 Enviando...';
 
-    try {
-      const key = 'resp:' + data.hospital.replace(/\s+/g, '_').slice(0,40) + ':' + Date.now();
-      await window.storage.set(key, JSON.stringify(data), true); // shared=true
-      status.className = 'save-status';
-      status.textContent = '✓ Guardado en base de datos';
-    } catch(e) {
+    if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+      // Modo demo sin backend configurado
       status.className = 'save-status error';
-      status.textContent = '⚠ Error al guardar';
-      console.error(e);
+      status.textContent = '⚠ Backend no configurado';
+      setTimeout(() => goCompletion(), 800);
+      return;
     }
 
+    try {
+      const resp = await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      status.className = 'save-status';
+      status.textContent = '✓ Guardado en Google Sheets';
+    } catch(e) {
+      status.className = 'save-status error';
+      status.textContent = '⚠ Error de conexión';
+      console.error(e);
+    }
+    goCompletion();
+  }
+
+  function goCompletion() {
     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-complete').classList.add('active');
     document.getElementById('progressBar').style.width = '100%';
@@ -1510,60 +1525,54 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── DASHBOARD ────────────────────────────────────────────────
+  // ── DASHBOARD (lee de Google Sheets vía Apps Script) ──────────
   async function loadDashboard() {
     document.getElementById('db-loading').style.display = 'block';
     document.getElementById('db-content').style.display = 'none';
     document.getElementById('db-empty').style.display = 'none';
 
+    if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+      document.getElementById('db-loading').style.display = 'none';
+      document.getElementById('db-empty').style.display = 'block';
+      document.getElementById('db-empty').innerHTML = `
+        <div style="font-size:48px;margin-bottom:16px">⚙️</div>
+        <p style="font-size:16px;font-weight:600;">Backend no configurado todavía</p>
+        <p style="font-size:14px;margin-top:8px;color:var(--gray-text)">Sigue las instrucciones del archivo README para conectar Google Sheets.</p>`;
+      return;
+    }
+
     try {
-      const keys = await window.storage.list('resp:', true);
-      if (!keys || !keys.keys || keys.keys.length === 0) {
+      const resp = await fetch(SHEETS_URL + '?action=get');
+      const allData = await resp.json();
+      if (!allData || allData.length === 0) {
         document.getElementById('db-loading').style.display = 'none';
         document.getElementById('db-empty').style.display = 'block';
         return;
       }
-
-      const allData = [];
-      for (const key of keys.keys) {
-        try {
-          const r = await window.storage.get(key, true);
-          if (r) allData.push(JSON.parse(r.value));
-        } catch(e) { /* skip */ }
-      }
-
-      if (allData.length === 0) {
-        document.getElementById('db-loading').style.display = 'none';
-        document.getElementById('db-empty').style.display = 'block';
-        return;
-      }
-
       renderDashboard(allData);
     } catch(e) {
       document.getElementById('db-loading').style.display = 'none';
+      document.getElementById('db-empty').innerHTML = `
+        <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+        <p style="font-size:16px;">Error al cargar los datos</p>
+        <p style="font-size:13px;color:var(--gray-text);margin-top:6px">${e.message}</p>`;
       document.getElementById('db-empty').style.display = 'block';
       console.error(e);
     }
   }
 
   function renderDashboard(allData) {
-    // Count totals
     const allItems = {};
     allData.forEach(d => {
       Object.entries(d.responses || {}).forEach(([key, val]) => {
-        if (!allItems[key]) allItems[key] = {si:0, no:0, np:0, total:0};
+        if (!allItems[key]) allItems[key] = { si:0, no:0, np:0, total:0 };
         allItems[key][val] = (allItems[key][val] || 0) + 1;
         allItems[key].total++;
       });
     });
 
-    // Summary cards
-    let totalSi = 0, totalNo = 0, totalNp = 0;
-    Object.values(allItems).forEach(v => {
-      totalSi += v.si || 0;
-      totalNo += v.no || 0;
-      totalNp += v.np || 0;
-    });
+    let totalSi = 0, totalNo = 0;
+    Object.values(allItems).forEach(v => { totalSi += v.si||0; totalNo += v.no||0; });
 
     document.getElementById('db-summary').innerHTML = `
       <div class="summary-card">
@@ -1577,19 +1586,17 @@
       <div class="summary-card">
         <div class="num num-no">${totalNo}</div>
         <div class="lbl">Respuestas NO</div>
-      </div>
-    `;
+      </div>`;
 
-    // Table of hospitals
     const rows = allData.map(d => {
       const total = Object.keys(d.responses || {}).length;
-      const si = Object.values(d.responses || {}).filter(v => v === 'si').length;
-      const no = Object.values(d.responses || {}).filter(v => v === 'no').length;
+      const si  = Object.values(d.responses || {}).filter(v => v === 'si').length;
+      const no  = Object.values(d.responses || {}).filter(v => v === 'no').length;
       const pct = total > 0 ? Math.round((si/total)*100) : 0;
       const date = d.timestamp ? new Date(d.timestamp).toLocaleDateString('es-ES') : '';
       return `<tr>
-        <td><strong>${d.hospital || '—'}</strong></td>
-        <td>${d.ccaa || '—'}</td>
+        <td><strong>${d.hospital||'—'}</strong></td>
+        <td>${d.ccaa||'—'}</td>
         <td>${d.tipo ? d.tipo.split('/')[0].trim() : '—'}</td>
         <td><span class="tag-si">SÍ ${si}</span> <span class="tag-no">NO ${no}</span></td>
         <td>${pct}% disponibilidad</td>
@@ -1597,23 +1604,33 @@
       </tr>`;
     }).join('');
 
-    // Top items NOT available
     const noItems = Object.entries(allItems)
-      .filter(([k,v]) => (v.no||0) > 0)
+      .filter(([,v]) => (v.no||0) > 0)
       .sort((a,b) => (b[1].no||0) - (a[1].no||0))
-      .slice(0, 10);
+      .slice(0, 15);
 
     const noRows = noItems.map(([key, v]) => {
+      const label = document.querySelector(`input[name="${key}"]`)
+        ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
       const pctNo = Math.round(((v.no||0)/v.total)*100);
       return `<tr>
-        <td><code style="font-size:12px;color:var(--gray-text)">${key}</code></td>
-        <td><span class="tag-no">NO: ${v.no}</span></td>
-        <td>${pctNo}% de centros no disponen</td>
+        <td>${label}</td>
+        <td><span class="tag-no">NO: ${v.no} / ${v.total}</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden">
+              <div style="height:6px;background:var(--red);width:${pctNo}%;border-radius:3px"></div>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:var(--red)">${pctNo}%</span>
+          </div>
+        </td>
       </tr>`;
     }).join('');
 
     document.getElementById('db-table-wrap').innerHTML = `
-      <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">Hospitales participantes (${allData.length})</h3>
+      <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
+        Hospitales participantes (${allData.length})
+      </h3>
       <div style="overflow-x:auto;margin-bottom:32px">
         <table class="dashboard-table">
           <thead><tr><th>Hospital</th><th>CCAA</th><th>Tipo</th><th>Respuestas</th><th>Disponibilidad</th><th>Fecha</th></tr></thead>
@@ -1621,67 +1638,54 @@
         </table>
       </div>
       ${noItems.length > 0 ? `
-      <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">Ítems con mayor tasa de NO disponibilidad</h3>
-      <div style="overflow-x:auto">
-        <table class="dashboard-table">
-          <thead><tr><th>Ítem</th><th>Respuestas NO</th><th>% centros</th></tr></thead>
-          <tbody>${noRows}</tbody>
-        </table>
-      </div>` : ''}
-    `;
+        <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
+          Recursos con mayor tasa de NO disponibilidad
+        </h3>
+        <div style="overflow-x:auto">
+          <table class="dashboard-table">
+            <thead><tr><th>Ítem</th><th>Centros sin disponibilidad</th><th>% hospitales</th></tr></thead>
+            <tbody>${noRows}</tbody>
+          </table>
+        </div>` : ''}`;
 
     document.getElementById('db-loading').style.display = 'none';
     document.getElementById('db-content').style.display = 'block';
   }
 
-  // ── EXPORT ────────────────────────────────────────────────────
+  // ── DESCARGAS ────────────────────────────────────────────────
   function downloadResults() {
     const data = collectData();
     let csv = 'Hospital;CCAA;Tipo;Item;Respuesta\n';
     Object.entries(data.responses).forEach(([key, val]) => {
-      csv += `"${data.hospital}";"${data.ccaa}";"${data.tipo}";"${key}";"${val.toUpperCase()}"\n`;
+      const label = document.querySelector(`input[name="${key}"]`)
+        ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
+      csv += `"${data.hospital}";"${data.ccaa}";"${data.tipo}";"${label}";"${val.toUpperCase()}"\n`;
     });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `encuesta_SEUP_${data.hospital.replace(/\s+/g,'_')}.csv`;
-    a.click();
+    _downloadCSV(csv, `encuesta_SEUP_${data.hospital.replace(/\s+/g,'_')}.csv`);
   }
 
   async function exportAllCSV() {
+    if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+      alert('Configura el backend primero para exportar todos los datos.');
+      return;
+    }
     try {
-      const keys = await window.storage.list('resp:', true);
-      if (!keys || !keys.keys || keys.keys.length === 0) {
-        alert('No hay datos en la base de datos todavía.');
-        return;
-      }
-      let csv = 'Hospital;CCAA;Tipo;Fecha;Item;Respuesta\n';
-      for (const key of keys.keys) {
-        try {
-          const r = await window.storage.get(key, true);
-          if (r) {
-            const d = JSON.parse(r.value);
-            const date = d.timestamp ? new Date(d.timestamp).toLocaleDateString('es-ES') : '';
-            Object.entries(d.responses || {}).forEach(([item, val]) => {
-              csv += `"${d.hospital}";"${d.ccaa}";"${d.tipo}";"${date}";"${item}";"${val.toUpperCase()}"\n`;
-            });
-          }
-        } catch(e) { /* skip */ }
-      }
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'encuesta_SEUP_TODOS_LOS_HOSPITALES.csv';
-      a.click();
+      const resp = await fetch(SHEETS_URL + '?action=csv');
+      const csv  = await resp.text();
+      _downloadCSV(csv, 'encuesta_SEUP_TODOS_LOS_HOSPITALES.csv');
     } catch(e) {
       alert('Error al exportar: ' + e.message);
     }
+  }
+
+  function _downloadCSV(csv, filename) {
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
   }
 
   // Init
   updateProgress();
 </script>
 </body>
-</html>
