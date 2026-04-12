@@ -2685,6 +2685,16 @@
     }
 
     function goTo(index) {
+        // Validate all sections between current and target before allowing forward navigation
+        if (index > currentSection) {
+            for (var i = currentSection; i < index; i++) {
+                var r = validateSection(i);
+                if (!r.ok) {
+                    showValError(r.msg);
+                    return;
+                }
+            }
+        }
         document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
         document.getElementById('panel-' + index).classList.add('active');
         currentSection = index;
@@ -2694,6 +2704,7 @@
             behavior: 'smooth'
         });
     }
+
 
     function goToDb() {
         document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
