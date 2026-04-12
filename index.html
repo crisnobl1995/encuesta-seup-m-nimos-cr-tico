@@ -2719,6 +2719,9 @@
             var h = document.getElementById('hospitalName').value.trim();
             var c = document.getElementById('ccaa').value;
             var t = document.getElementById('tipoCentro').value;
+            var v = document.getElementById('volumen').value;
+            var u = document.getElementById('ucip').value;
+            var r = document.getElementById('responsable').value.trim();
             if (!h)
                 return {
                     ok: false,
@@ -2733,6 +2736,21 @@
                 return {
                     ok: false,
                     msg: '⚠️ Selecciona el tipo de centro.'
+                };
+            if (!v)
+                return {
+                    ok: false,
+                    msg: '⚠️ Selecciona el número de urgencias anuales.'
+                };
+            if (!u)
+                return {
+                    ok: false,
+                    msg: '⚠️ Selecciona si dispone de UCIP.'
+                };
+            if (!r)
+                return {
+                    ok: false,
+                    msg: '⚠️ Introduce el cargo del responsable.'
                 };
             return {
                 ok: true
