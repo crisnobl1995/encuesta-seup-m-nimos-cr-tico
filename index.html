@@ -778,6 +778,70 @@
         border-left: 1px solid rgba(255, 255, 255, 0.1);
         margin-left: auto;
     }
+
+    .item-right {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+    }
+
+    .ms-dropdown {
+        background: rgba(0, 180, 160, 0.06);
+        border: 1.5px solid rgba(0, 180, 160, 0.25);
+        border-radius: 8px;
+        padding: 10px 14px;
+        width: 100%;
+        margin-top: 2px;
+    }
+
+    .ms-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--teal);
+        margin-bottom: 8px;
+    }
+
+    .ms-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .ms-opt {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: white;
+        border: 1.5px solid var(--gray-mid);
+        border-radius: 20px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--navy);
+        transition: all 0.15s;
+    }
+
+    .ms-opt:hover {
+        border-color: var(--teal);
+    }
+
+    .ms-opt input[type=checkbox] {
+        display: none;
+    }
+
+    .ms-opt input[type=checkbox]:checked + span {
+        color: var(--teal);
+        font-weight: 700;
+    }
+
+    .ms-opt:has(input:checked) {
+        background: rgba(0, 180, 160, 0.1);
+        border-color: var(--teal);
+    }
     </style>
 </head>
 <body>
@@ -1302,9 +1366,44 @@
                         <div class="item-label">Sistema de aspirador de pared (con regulación de presión)</div>
                         <div class="triple-check" data-n="va_aspirpared"></div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Sondas de aspiración nº 6–7–8–10–12–14–16</div>
-                        <div class="triple-check" data-n="va_sondas"></div>
+                    <div class="item-row" id="row_va_sondas">
+                        <div class="item-label">Sondas de aspiración nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_sondas" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_sondas" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="6">
+                                        <span>6</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="7">
+                                        <span>7</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="8">
+                                        <span>8</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="10">
+                                        <span>10</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="12">
+                                        <span>12</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="14">
+                                        <span>14</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_sondas_sub" value="16">
+                                        <span>16</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Sonda Yankauer</div>
@@ -1368,24 +1467,141 @@
                     Vía Aérea — Instrumentación
                 </div>
                 <div class="items-grid">
-                    <div class="item-row">
-                        <div class="item-label">Cánulas orofaríngeas nº 00-0-1-2-3-4-5-6</div>
-                        <div class="triple-check" data-n="va_canor"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">Cánulas nasofaríngeas 12–14–16–18–20–22 Fr</div>
-                        <div class="triple-check" data-n="va_cannas"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">Mascarillas faciales nº 0-1-2-3-4-5</div>
-                        <div class="triple-check" data-n="va_mascfac"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">
-                            Bolsas de ventilación manual y reservorios
-                            <small>250 ml, 450–500 ml, 1600–2000 ml</small>
+                    <div class="item-row" id="row_va_canor">
+                        <div class="item-label">Cánulas orofaríngeas nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_canor" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_canor" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="00">
+                                        <span>00</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="0">
+                                        <span>0</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="1">
+                                        <span>1</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="2">
+                                        <span>2</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="3">
+                                        <span>3</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="4">
+                                        <span>4</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="5">
+                                        <span>5</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_canor_sub" value="6">
+                                        <span>6</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="triple-check" data-n="va_bolsas"></div>
+                    </div>
+                    <div class="item-row" id="row_va_cannas">
+                        <div class="item-label">Cánulas nasofaríngeas Fr.</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_cannas" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_cannas" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_cannas_sub" value="12">
+                                        <span>12</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_cannas_sub" value="14">
+                                        <span>14</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_cannas_sub" value="16">
+                                        <span>16</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_cannas_sub" value="18">
+                                        <span>18</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_cannas_sub" value="20">
+                                        <span>20</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_cannas_sub" value="22">
+                                        <span>22</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-row" id="row_va_mascfac">
+                        <div class="item-label">Mascarillas faciales nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_mascfac" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_mascfac" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_mascfac_sub" value="0">
+                                        <span>0</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_mascfac_sub" value="1">
+                                        <span>1</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_mascfac_sub" value="2">
+                                        <span>2</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_mascfac_sub" value="3">
+                                        <span>3</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_mascfac_sub" value="4">
+                                        <span>4</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_mascfac_sub" value="5">
+                                        <span>5</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-row" id="row_va_bolsas">
+                        <div class="item-label">Bolsas de ventilación manual y reservorios</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_bolsas" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_bolsas" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_bolsas_sub" value="250 ml">
+                                        <span>250 ml</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_bolsas_sub" value="450–500 ml">
+                                        <span>450–500 ml</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_bolsas_sub" value="1600–2000 ml">
+                                        <span>1600–2000 ml</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Válvula de PEEP: 5 y 20 cm H₂O</div>
@@ -1395,13 +1611,59 @@
                         <div class="item-label">Pinza de Magill: pequeña y grande</div>
                         <div class="triple-check" data-n="va_magill"></div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Laringoscopio con pilas y palas rectas (Miller) nº 00–0–1</div>
-                        <div class="triple-check" data-n="va_miller"></div>
+                    <div class="item-row" id="row_va_miller">
+                        <div class="item-label">Laringoscopio con pilas y palas rectas (Miller) nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_miller" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_miller" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_miller_sub" value="00">
+                                        <span>00</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_miller_sub" value="0">
+                                        <span>0</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_miller_sub" value="1">
+                                        <span>1</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Palas curvas (Macintosh) nº 1–2–3–4–5</div>
-                        <div class="triple-check" data-n="va_macin"></div>
+                    <div class="item-row" id="row_va_macin">
+                        <div class="item-label">Palas curvas (Macintosh) nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_macin" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_macin" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_macin_sub" value="1">
+                                        <span>1</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_macin_sub" value="2">
+                                        <span>2</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_macin_sub" value="3">
+                                        <span>3</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_macin_sub" value="4">
+                                        <span>4</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_macin_sub" value="5">
+                                        <span>5</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Tubos endotraqueales sin balón nº 2,5–3–3,5–4</div>
@@ -1423,9 +1685,44 @@
                     Vía Aérea Difícil y Drenaje Torácico
                 </div>
                 <div class="items-grid">
-                    <div class="item-row">
-                        <div class="item-label">Mascarillas laríngeas nº 1–1,5–2–2,5–3–3,5–4</div>
-                        <div class="triple-check" data-n="va_masc_lar"></div>
+                    <div class="item-row" id="row_va_masc_lar">
+                        <div class="item-label">Mascarillas laríngeas nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_masc_lar" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_masc_lar" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="1">
+                                        <span>1</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="1,5">
+                                        <span>1,5</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="2">
+                                        <span>2</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="2,5">
+                                        <span>2,5</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="3">
+                                        <span>3</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="3,5">
+                                        <span>3,5</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_masc_lar_sub" value="4">
+                                        <span>4</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Videolaringoscopio (Airtraq® o equivalente)</div>
@@ -1443,9 +1740,44 @@
                         <div class="item-label">Aguja y set de cricotiroidotomía</div>
                         <div class="triple-check" data-n="va_cricot"></div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Cánulas de traqueotomía nº 0–1–2–3–4–5–6</div>
-                        <div class="triple-check" data-n="va_traqueo"></div>
+                    <div class="item-row" id="row_va_traqueo">
+                        <div class="item-label">Cánulas de traqueotomía nº</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="va_traqueo" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_va_traqueo" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="0">
+                                        <span>0</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="1">
+                                        <span>1</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="2">
+                                        <span>2</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="3">
+                                        <span>3</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="4">
+                                        <span>4</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="5">
+                                        <span>5</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="va_traqueo_sub" value="6">
+                                        <span>6</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">
@@ -1504,9 +1836,28 @@
                         <div class="item-label">Bombas de perfusión continua</div>
                         <div class="triple-check" data-n="cir_bombas"></div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Ecógrafo y sondas (lineal, sectorial, cónvex)</div>
-                        <div class="triple-check" data-n="cir_eco"></div>
+                    <div class="item-row" id="row_cir_eco">
+                        <div class="item-label">Ecógrafo y sondas</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="cir_eco" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_cir_eco" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="cir_eco_sub" value="Lineal">
+                                        <span>Lineal</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="cir_eco_sub" value="Sectorial">
+                                        <span>Sectorial</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="cir_eco_sub" value="Cónvex">
+                                        <span>Cónvex</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1597,20 +1948,71 @@
                         <div class="item-label">Tabla de transferencia</div>
                         <div class="triple-check" data-n="tr_tabla_trans"></div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Equipo de inmovilización (vendas, férulas, yesos)</div>
-                        <div class="triple-check" data-n="tr_equip_inmov"></div>
+                    <div class="item-row" id="row_tr_equip_inmov">
+                        <div class="item-label">Equipo de inmovilización</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="tr_equip_inmov" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_tr_equip_inmov" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_equip_inmov_sub" value="Vendas">
+                                        <span>Vendas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_equip_inmov_sub" value="Férulas">
+                                        <span>Férulas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_equip_inmov_sub" value="Yesos">
+                                        <span>Yesos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Tijeras y sierra para cortar vendas y yesos</div>
                         <div class="triple-check" data-n="tr_sierra"></div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">
-                            Equipo reparación de heridas (pegamento, grapas, suturas)
-                            <small>Portas, pinzas, tijeras</small>
+                    <div class="item-row" id="row_tr_heridas">
+                        <div class="item-label">Equipo reparación de heridas</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="tr_heridas" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_tr_heridas" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Pegamento">
+                                        <span>Pegamento</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Grapas">
+                                        <span>Grapas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Suturas">
+                                        <span>Suturas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Portas">
+                                        <span>Portas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Pinzas">
+                                        <span>Pinzas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Tijeras">
+                                        <span>Tijeras</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="tr_heridas_sub" value="Mosquitos">
+                                        <span>Mosquitos</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="triple-check" data-n="tr_heridas"></div>
                     </div>
                 </div>
             </div>
@@ -1651,13 +2053,6 @@
                     Especialidades (Plástica, ORL, Oftalmología)
                 </div>
                 <div class="items-grid">
-                    <div class="item-row">
-                        <div class="item-label">
-                            Equipos reparación heridas plástica
-                            <small>Suturas, pegamentos biológicos, grapas, portas, tijeras, pinzas, mosquitos</small>
-                        </div>
-                        <div class="triple-check" data-n="esp_plastica"></div>
-                    </div>
                     <div class="item-row">
                         <div class="item-label">Equipos para retirar cuerpos extraños (ORL / Oftalmología)</div>
                         <div class="triple-check" data-n="esp_ce"></div>
@@ -2223,8 +2618,12 @@
                         <div class="triple-check" data-n="lab_card"></div>
                     </div>
                     <div class="item-row">
-                        <div class="item-label">PCR, PCT, Carboxihemoglobina, Metahemoglobina</div>
-                        <div class="triple-check" data-n="lab_infec"></div>
+                        <div class="item-label">PCR y PCT</div>
+                        <div class="triple-check" data-n="lab_pcr_pct"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Carboxihemoglobina y Metahemoglobina</div>
+                        <div class="triple-check" data-n="lab_carboxy"></div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Cultivos: hemocultivo, LCR, urocultivo</div>
@@ -2481,37 +2880,196 @@
                     Protocolos Clínicos Accesibles
                 </div>
                 <div class="items-grid">
-                    <div class="item-row">
-                        <div class="item-label">RCP, bradiarritmias, taquiarritmias, cardioversión, desfibrilación, marcapasos</div>
-                        <div class="triple-check" data-n="pro_rcp"></div>
+                    <div class="item-row" id="row_pro_cardiov">
+                        <div class="item-label">Cardiovascular</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="pro_cardiov" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_pro_cardiov" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_cardiov_sub" value="RCP">
+                                        <span>RCP</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_cardiov_sub" value="Arritmias">
+                                        <span>Arritmias</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_cardiov_sub" value="Cardioversión y desfibrilación">
+                                        <span>Cardioversión y desfibrilación</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_cardiov_sub" value="Marcapasos">
+                                        <span>Marcapasos</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_cardiov_sub" value="Lesiones por electricidad">
+                                        <span>Lesiones por electricidad</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Insuficiencia respiratoria: OAF, VNI, VMC</div>
-                        <div class="triple-check" data-n="pro_resp"></div>
+                    <div class="item-row" id="row_pro_resp">
+                        <div class="item-label">Respiratorio</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="pro_resp" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_pro_resp" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_resp_sub" value="BAO/Crisis asmática">
+                                        <span>BAO/Crisis asmática</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_resp_sub" value="Bronquiolitis">
+                                        <span>Bronquiolitis</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_resp_sub" value="Laringitis">
+                                        <span>Laringitis</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_resp_sub" value="Aspiración de cuerpo extraño">
+                                        <span>Aspiración de cuerpo extraño</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_resp_sub" value="Soporte respiratorio (OAF, VMNI, VMC)">
+                                        <span>Soporte respiratorio (OAF, VMNI, VMC)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Shock (hipovolémico, séptico, anafiláctico, cardiogénico, obstructivo) / Transfusión masiva</div>
-                        <div class="triple-check" data-n="pro_shock"></div>
+                    <div class="item-row" id="row_pro_hemo">
+                        <div class="item-label">Hemodinámico</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="pro_hemo" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_pro_hemo" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_hemo_sub" value="Manejo del shock (Hipovolémico, Séptico, Anafiláctico, Cardiogénico, Obstructivo)">
+                                        <span>Manejo del shock (Hipovolémico, Séptico, Anafiláctico, Cardiogénico, Obstructivo)</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_hemo_sub" value="Deshidratación">
+                                        <span>Deshidratación</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_hemo_sub" value="Sueroterapia">
+                                        <span>Sueroterapia</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_hemo_sub" value="Crisis HTA">
+                                        <span>Crisis HTA</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Coma, convulsión y estatus epiléptico, ictus, HTIC</div>
-                        <div class="triple-check" data-n="pro_neuro"></div>
+                    <div class="item-row" id="row_pro_neuro">
+                        <div class="item-label">Neurológico</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="pro_neuro" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_pro_neuro" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Coma">
+                                        <span>Coma</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Convulsión y estatus epiléptico">
+                                        <span>Convulsión y estatus epiléptico</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Ictus">
+                                        <span>Ictus</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="HTIC">
+                                        <span>HTIC</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="TCE">
+                                        <span>TCE</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Intoxicaciones">
+                                        <span>Intoxicaciones</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="BRUE/EAL">
+                                        <span>BRUE/EAL</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Niño agitado">
+                                        <span>Niño agitado</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Síncope">
+                                        <span>Síncope</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Infecciones SNC">
+                                        <span>Infecciones SNC</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_neuro_sub" value="Manejo del dolor y sedoanalgesia">
+                                        <span>Manejo del dolor y sedoanalgesia</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item-row">
-                        <div class="item-label">Politrauma y traumatismo craneoencefálico</div>
-                        <div class="triple-check" data-n="pro_trauma"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">Intoxicaciones, BRUE/EAL, ahogamiento, gran quemado, aspiración de cuerpo extraño</div>
-                        <div class="triple-check" data-n="pro_intox"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">Niño agitado / Emergencias metabólicas</div>
-                        <div class="triple-check" data-n="pro_agit"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">Actuación ante maltrato y abuso sexual</div>
-                        <div class="triple-check" data-n="pro_maltrato"></div>
+                    <div class="item-row" id="row_pro_otros">
+                        <div class="item-label">Otros protocolos</div>
+                        <div class="item-right">
+                            <div class="triple-check" data-n="pro_otros" data-dd="1"></div>
+                            <div class="ms-dropdown" id="ms_pro_otros" style="display:none">
+                                <div class="ms-label">Especifica cuáles:</div>
+                                <div class="ms-options">
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="PPT">
+                                        <span>PPT</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Gran quemado">
+                                        <span>Gran quemado</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Emergencias metabólicas">
+                                        <span>Emergencias metabólicas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Ahogamiento">
+                                        <span>Ahogamiento</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Hipo e Hipertermia">
+                                        <span>Hipo e Hipertermia</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Dolor abdominal">
+                                        <span>Dolor abdominal</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Mordedura/Picadura de animales">
+                                        <span>Mordedura/Picadura de animales</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Urgencias Psiquiátricas">
+                                        <span>Urgencias Psiquiátricas</span>
+                                    </label>
+                                    <label class="ms-opt">
+                                        <input type="checkbox" name="pro_otros_sub" value="Maltrato y abuso sexual infantil">
+                                        <span>Maltrato y abuso sexual infantil</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2522,32 +3080,64 @@
                 </div>
                 <div class="items-grid">
                     <div class="item-row">
-                        <div class="item-label">Toracocentesis, drenaje pleural, toracotomía</div>
-                        <div class="triple-check" data-n="proc_torac"></div>
+                        <div class="item-label">Aspiración de secreciones</div>
+                        <div class="triple-check" data-n="proc_aspir"></div>
                     </div>
                     <div class="item-row">
-                        <div class="item-label">Traqueotomía y cuidados / Cricotiroidotomía</div>
-                        <div class="triple-check" data-n="proc_traq"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-label">Canalización vía periférica, intraósea, central / Cuidados Port-a-cath</div>
+                        <div class="item-label">Canalización de vías (periféricas, centrales, intraósea)</div>
                         <div class="triple-check" data-n="proc_vias"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Cura de heridas y quemaduras</div>
+                        <div class="triple-check" data-n="proc_cura"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">ECG</div>
+                        <div class="triple-check" data-n="proc_ecg"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Toracocentesis, drenaje pleural y toracotomía</div>
+                        <div class="triple-check" data-n="proc_torac"></div>
                     </div>
                     <div class="item-row">
                         <div class="item-label">Pericardiocentesis</div>
                         <div class="triple-check" data-n="proc_peric"></div>
                     </div>
                     <div class="item-row">
-                        <div class="item-label">Sedoanalgesia</div>
-                        <div class="triple-check" data-n="proc_sedan"></div>
+                        <div class="item-label">Inmovilización de miembros</div>
+                        <div class="triple-check" data-n="proc_inmov"></div>
                     </div>
                     <div class="item-row">
-                        <div class="item-label">Sondaje nasogástrico, vesical, rectal / Cuidados gastrostomía</div>
-                        <div class="triple-check" data-n="proc_sondas"></div>
+                        <div class="item-label">Lavado gástrico</div>
+                        <div class="triple-check" data-n="proc_lavado"></div>
                     </div>
                     <div class="item-row">
-                        <div class="item-label">Contención física y farmacológica / Medidas de descontaminación</div>
-                        <div class="triple-check" data-n="proc_conten"></div>
+                        <div class="item-label">Oxigenoterapia y ventilación en urgencias</div>
+                        <div class="triple-check" data-n="proc_o2"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Punción lumbar</div>
+                        <div class="triple-check" data-n="proc_pl"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Respirador de transporte</div>
+                        <div class="triple-check" data-n="proc_resp"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Sondaje nasogástrico</div>
+                        <div class="triple-check" data-n="proc_sng"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Sondaje uretral y recogida de orina</div>
+                        <div class="triple-check" data-n="proc_sonda_ur"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Desfibrilador en urgencias</div>
+                        <div class="triple-check" data-n="proc_defib"></div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-label">Traqueotomía y cuidados</div>
+                        <div class="triple-check" data-n="proc_traq"></div>
                     </div>
                 </div>
             </div>
@@ -2573,7 +3163,7 @@
                         <div class="triple-check" data-n="plan_fallec"></div>
                     </div>
                     <div class="item-row">
-                        <div class="item-label">Coordinación con otros sistemas sanitarios (CCEE, AP, CCII)</div>
+                        <div class="item-label">Coordinación con otros sistemas sanitarios (Consultas externas, Atención primaria, etc.)</div>
                         <div class="triple-check" data-n="plan_coord"></div>
                     </div>
                     <div class="item-row">
@@ -2607,7 +3197,6 @@
                 <button class="btn btn-submit" onclick="submitSurvey()">✓ Enviar Encuesta</button>
             </div>
         </div>
-        <!-- COMPLETION SCREEN -->
         <div class="section-panel" id="panel-complete">
             <div class="completion-screen">
                 <div class="completion-icon">✓</div>
@@ -2665,386 +3254,308 @@
         </div>
     </main>
     <script>
-    // ══════════════════════════════════════════════════════════════
-    // CONFIGURACIÓN — Pega aquí tu URL de Google Apps Script
-    // (ver instrucciones en el archivo README_CONFIGURACION.txt)
-    // ══════════════════════════════════════════════════════════════
-    const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz3TobpZ_1gw_pleUPBGyLfSjZfwT-VSY9MjiUgn3UU_01P4yU0wOu6LcLW9GB16C732w/exec';
+     // ══════════════════════════════════════════════════════════════
+     // CONFIGURACIÓN — Pega aquí tu URL de Google Apps Script
+     // (ver instrucciones en el archivo README_CONFIGURACION.txt)
+     // ══════════════════════════════════════════════════════════════
+     const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz3TobpZ_1gw_pleUPBGyLfSjZfwT-VSY9MjiUgn3UU_01P4yU0wOu6LcLW9GB16C732w/exec';
 
-    let currentSection = 0;
-    const totalSections = 9;
+     let currentSection = 0;
+     const totalSections = 9;
 
-    function updateProgress() {
-        const pct = ((currentSection) / totalSections) * 100;
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.querySelectorAll('.tab-btn:not(.db-tab)').forEach((btn, i) => {
-            btn.classList.toggle('active', i === currentSection);
-        });
-        document.querySelector('.db-tab').classList.remove('active');
-        document.getElementById('mainLegend').style.display = 'flex';
-    }
+     function updateProgress() {
+     const pct = ((currentSection) / totalSections) * 100;
+     document.getElementById('progressBar').style.width = pct + '%';
+     document.querySelectorAll('.tab-btn:not(.db-tab)').forEach((btn, i) => {
+     btn.classList.toggle('active', i === currentSection);
+     });
+     document.querySelector('.db-tab').classList.remove('active');
+     document.getElementById('mainLegend').style.display = 'flex';
+     }
 
-    function goTo(index) {
+     function goTo(index) {
         // Validate all sections between current and target before allowing forward navigation
         if (index > currentSection) {
-            for (var i = currentSection; i < index; i++) {
-                var r = validateSection(i);
-                if (!r.ok) {
-                    showValError(r.msg);
-                    return;
-                }
-            }
+          for (var i = currentSection; i < index; i++) {
+            var r = validateSection(i);
+            if (!r.ok) { showValError(r.msg); return; }
+          }
         }
         document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
         document.getElementById('panel-' + index).classList.add('active');
         currentSection = index;
         updateProgress();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
 
+     function goToDb() {
+     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+     document.getElementById('panel-db').classList.add('active');
+     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+     document.querySelector('.db-tab').classList.add('active');
+     document.getElementById('mainLegend').style.display = 'none';
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+     loadDashboard();
+     }
 
-    function goToDb() {
-        document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('panel-db').classList.add('active');
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('.db-tab').classList.add('active');
-        document.getElementById('mainLegend').style.display = 'none';
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        loadDashboard();
-    }
-
-    // ── VALIDACIÓN ────────────────────────────────────────────
-    function validateSection(index) {
+     // ── VALIDACIÓN ────────────────────────────────────────────
+      function validateSection(index) {
         var panel = document.getElementById('panel-' + index);
-        if (!panel)
-            return {
-                ok: true
-            };
+        if (!panel) return {ok:true};
         if (index === 0) {
-            var h = document.getElementById('hospitalName').value.trim();
-            var c = document.getElementById('ccaa').value;
-            var t = document.getElementById('tipoCentro').value;
-            var v = document.getElementById('volumen').value;
-            var u = document.getElementById('ucip').value;
-            var r = document.getElementById('responsable').value.trim();
-            if (!h)
-                return {
-                    ok: false,
-                    msg: '⚠️ Introduce el nombre del hospital.'
-                };
-            if (!c)
-                return {
-                    ok: false,
-                    msg: '⚠️ Selecciona la Comunidad Autónoma.'
-                };
-            if (!t)
-                return {
-                    ok: false,
-                    msg: '⚠️ Selecciona el tipo de centro.'
-                };
-            if (!v)
-                return {
-                    ok: false,
-                    msg: '⚠️ Selecciona el número de urgencias anuales.'
-                };
-            if (!u)
-                return {
-                    ok: false,
-                    msg: '⚠️ Selecciona si dispone de UCIP.'
-                };
-            if (!r)
-                return {
-                    ok: false,
-                    msg: '⚠️ Introduce el cargo del responsable.'
-                };
-            return {
-                ok: true
-            };
+          var h = document.getElementById('hospitalName').value.trim();
+          var c = document.getElementById('ccaa').value;
+          var t = document.getElementById('tipoCentro').value;
+          var v = document.getElementById('volumen').value;
+          var u = document.getElementById('ucip').value;
+          var r = document.getElementById('responsable').value.trim();
+          if (!h) return {ok:false, msg:'⚠️ Introduce el nombre del hospital.'};
+          if (!c) return {ok:false, msg:'⚠️ Selecciona la Comunidad Autónoma.'};
+          if (!t) return {ok:false, msg:'⚠️ Selecciona el tipo de centro.'};
+          if (!v) return {ok:false, msg:'⚠️ Selecciona el número de urgencias anuales.'};
+          if (!u) return {ok:false, msg:'⚠️ Selecciona si dispone de UCIP.'};
+          if (!r) return {ok:false, msg:'⚠️ Introduce el cargo del responsable.'};
+          return {ok:true};
         }
         var checks = panel.querySelectorAll('.triple-check');
         var unanswered = [];
-        checks.forEach(function(tc) {
-            if (!tc.querySelector('input[type="radio"]:checked'))
-                unanswered.push(tc);
-        });
+        checks.forEach(function(tc){ if (!tc.querySelector('input[type="radio"]:checked')) unanswered.push(tc); });
         if (unanswered.length > 0) {
-            checks.forEach(function(tc) {
-                tc.closest('.item-row').style.cssText = '';
-            });
-            unanswered.forEach(function(tc) {
-                tc.closest('.item-row').style.background = 'rgba(229,57,53,0.08)';
-                tc.closest('.item-row').style.borderLeft = '3px solid #e53935';
-            });
-            unanswered[0].closest('.item-row').scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-            return {
-                ok: false,
-                msg: '⚠️ Quedan ' + unanswered.length + ' pregunta' + (unanswered.length > 1 ? 's' : '') + ' sin responder.'
-            };
+          checks.forEach(function(tc){ tc.closest('.item-row').style.cssText=''; });
+          unanswered.forEach(function(tc){ tc.closest('.item-row').style.background='rgba(229,57,53,0.08)'; tc.closest('.item-row').style.borderLeft='3px solid #e53935'; });
+          unanswered[0].closest('.item-row').scrollIntoView({behavior:'smooth',block:'center'});
+          return {ok:false, msg:'⚠️ Quedan '+unanswered.length+' pregunta'+(unanswered.length>1?'s':'')+' sin responder.'};
         }
-        checks.forEach(function(tc) {
-            tc.closest('.item-row').style.cssText = '';
-        });
-        return {
-            ok: true
-        };
-    }
-    function showValError(msg) {
-        var e = document.getElementById('val-msg');
-        if (e)
-            e.remove();
-        var d = document.createElement('div');
-        d.id = 'val-msg';
-        d.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#e53935;color:white;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(229,57,53,0.4)';
-        d.textContent = msg;
-        document.body.appendChild(d);
-        setTimeout(function() {
-            if (d.parentNode)
-                d.remove();
-        }, 3500);
-    }
-    function nextSection() {
-        var r = validateSection(currentSection);
-        if (!r.ok) {
-            showValError(r.msg);
-            return;
-        }
-        if (currentSection < totalSections - 1)
-            goTo(currentSection + 1);
-    }
-    function prevSection() {
-        if (currentSection > 0)
-            goTo(currentSection - 1);
-    }
+        checks.forEach(function(tc){ tc.closest('.item-row').style.cssText=''; });
+        return {ok:true};
+      }
+      function showValError(msg) {
+        var e = document.getElementById('val-msg'); if(e) e.remove();
+        var d = document.createElement('div'); d.id='val-msg';
+        d.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#e53935;color:white;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(229,57,53,0.4)';
+        d.textContent=msg; document.body.appendChild(d);
+        setTimeout(function(){ if(d.parentNode) d.remove(); },3500);
+      }
+      function nextSection() {
+        var r=validateSection(currentSection); if(!r.ok){showValError(r.msg);return;}
+        if (currentSection < totalSections - 1) goTo(currentSection + 1);
+      }
+      function prevSection() {
+        if (currentSection > 0) goTo(currentSection - 1);
+      }
 
-    // ── RECOGER DATOS ─────────────────────────────────────────────
-    function collectData() {
-        const hospital = document.getElementById('hospitalName').value || 'Sin nombre';
-        const ccaa = document.getElementById('ccaa').value || '';
-        const tipo = document.getElementById('tipoCentro').value || '';
-        const volumen = document.getElementById('volumen').value || '';
-        const ucip = document.getElementById('ucip').value || '';
+     // ── RECOGER DATOS ─────────────────────────────────────────────
+     function collectData() {
+     const hospital = document.getElementById('hospitalName').value || 'Sin nombre';
+     const ccaa = document.getElementById('ccaa').value || '';
+     const tipo = document.getElementById('tipoCentro').value || '';
+     const volumen = document.getElementById('volumen').value || '';
+     const ucip = document.getElementById('ucip').value || '';
 
-        const responses = {};
+     const responses = {};
         document.querySelectorAll('.triple-check').forEach(tc => {
-            const checked = tc.querySelector('input[type="radio"]:checked');
-            if (checked)
-                responses[checked.name] = checked.value;
-        });
-
-        return {
-            hospital,
-            ccaa,
-            tipo,
-            volumen,
-            ucip,
-            timestamp: new Date().toISOString(),
-            responses
-        };
-    }
-
-    // ── ENVIAR A GOOGLE SHEETS ────────────────────────────────────
-    async function submitSurvey() {
-        var r = validateSection(currentSection);
-        if (!r.ok) {
-            showValidationError(r.msg);
-            return;
-        }
-        const data = collectData();
-        const status = document.getElementById('saveStatus');
-        status.style.display = 'inline-flex';
-        status.className = 'save-status saving';
-        status.textContent = '💾 Enviando...';
-
-        if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
-            // Modo demo sin backend configurado
-            status.className = 'save-status error';
-            status.textContent = '⚠ Backend no configurado';
-            setTimeout(() => goCompletion(), 800);
-            return;
-        }
-
-        try {
-            const resp = await fetch(SHEETS_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            status.className = 'save-status';
-            status.textContent = '✓ Guardado en Google Sheets';
-        } catch (e) {
-            status.className = 'save-status error';
-            status.textContent = '⚠ Error de conexión';
-            console.error(e);
-        }
-        goCompletion();
-    }
-
-    function goCompletion() {
-        document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('panel-complete').classList.add('active');
-        document.getElementById('progressBar').style.width = '100%';
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-
-    // ── DASHBOARD (lee de Google Sheets vía Apps Script) ──────────
-    async function loadDashboard() {
-        document.getElementById('db-loading').style.display = 'block';
-        document.getElementById('db-content').style.display = 'none';
-        document.getElementById('db-empty').style.display = 'none';
-
-        if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
-            document.getElementById('db-loading').style.display = 'none';
-            document.getElementById('db-empty').style.display = 'block';
-            document.getElementById('db-empty').innerHTML = `
- <div style="font-size:48px;margin-bottom:16px">⚙️</div><p style="font-size:16px;font-weight:600;">Backend no configurado todavía</p><p style="font-size:14px;margin-top:8px;color:var(--gray-text)">Sigue las instrucciones del archivo README para conectar Google Sheets.</p>`
-            ;
-            return;
-        }
-
-        try {
-            const resp = await fetch(SHEETS_URL + '?action=get');
-            const allData = await resp.json();
-            if (!allData || allData.length === 0) {
-                document.getElementById('db-loading').style.display = 'none';
-                document.getElementById('db-empty').style.display = 'block';
-                return;
+          const checked = tc.querySelector('input[type="radio"]:checked');
+          if (checked) {
+            responses[checked.name] = checked.value;
+            if (checked.value === 'si') {
+              var dd = document.getElementById('ms_' + checked.name);
+              if (dd) {
+                var sel = Array.from(dd.querySelectorAll('input[type=checkbox]:checked')).map(cb => cb.value);
+                if (sel.length > 0) responses[checked.name + '_detalle'] = sel.join(', ');
+              }
             }
-            renderDashboard(allData);
-        } catch (e) {
-            document.getElementById('db-loading').style.display = 'none';
-            document.getElementById('db-empty').innerHTML = `
- <div style="font-size:48px;margin-bottom:16px">⚠️</div><p style="font-size:16px;">Error al cargar los datos</p><p style="font-size:13px;color:var(--gray-text);margin-top:6px">${e.message}</p>`;
-            document.getElementById('db-empty').style.display = 'block';
-            console.error(e);
-        }
-    }
+          }
+        });) responses[checked.name] = checked.value;
+     });
 
-    function renderDashboard(allData) {
-        const allItems = {};
-        allData.forEach(d => {
-            Object.entries(d.responses || {}).forEach(([key, val]) => {
-                if (!allItems[key])
-                    allItems[key] = {
-                        si: 0,
-                        no: 0,
-                        np: 0,
-                        total: 0
-                    };
-                allItems[key][val] = (allItems[key][val] || 0) + 1;
-                allItems[key].total++;
-            });
-        });
+     return { hospital, ccaa, tipo, volumen, ucip, timestamp: new Date().toISOString(), responses };
+     }
 
-        let totalSi = 0,
-            totalNo = 0;
-        Object.values(allItems).forEach(v => {
-            totalSi += v.si || 0;
-            totalNo += v.no || 0;
-        });
+     // ── ENVIAR A GOOGLE SHEETS ────────────────────────────────────
+     async function submitSurvey() {
+        var r = validateSection(currentSection);
+        if (!r.ok) { showValidationError(r.msg); return; }
+     const data = collectData();
+     const status = document.getElementById('saveStatus');
+     status.style.display = 'inline-flex';
+     status.className = 'save-status saving';
+     status.textContent = '💾 Enviando...';
 
-        document.getElementById('db-summary').innerHTML = `
- <div class="summary-card"><div class="num" style="color:var(--navy)">${allData.length}</div><div class="lbl">Hospitales participantes</div></div><div class="summary-card"><div class="num num-si">${totalSi}</div><div class="lbl">Respuestas SÍ</div></div><div class="summary-card"><div class="num num-no">${totalNo}</div><div class="lbl">Respuestas NO</div></div>`;
+     if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+     // Modo demo sin backend configurado
+     status.className = 'save-status error';
+     status.textContent = '⚠ Backend no configurado';
+     setTimeout(() => goCompletion(), 800);
+     return;
+     }
 
-        const rows = allData.map(d => {
-            const total = Object.keys(d.responses || {}).length;
-            const si = Object.values(d.responses || {}).filter(v => v === 'si').length;
-            const no = Object.values(d.responses || {}).filter(v => v === 'no').length;
-            const pct = total > 0 ? Math.round((si / total) * 100) : 0;
-            const date = d.timestamp ? new Date(d.timestamp).toLocaleDateString('es-ES') : '';
-            return `<tr><td><strong>${d.hospital || '—'}</strong></td><td>${d.ccaa || '—'}</td><td>${d.tipo ? d.tipo.split('/')[0].trim() : '—'}</td><td><span class="tag-si">SÍ ${si}</span><span class="tag-no">NO ${no}</span></td><td>${pct}% disponibilidad</td><td class="stat-mini">${date}</td></tr>`;
-        }).join('');
+     try {
+     const resp = await fetch(SHEETS_URL, {
+     method: 'POST',
+     mode: 'no-cors',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify(data)
+     });
+     status.className = 'save-status';
+     status.textContent = '✓ Guardado en Google Sheets';
+     } catch(e) {
+     status.className = 'save-status error';
+     status.textContent = '⚠ Error de conexión';
+     console.error(e);
+     }
+     goCompletion();
+     }
 
-        const noItems = Object.entries(allItems)
-        .filter(([, v]) => (v.no || 0) > 0)
-        .sort((a, b) => (b[1].no || 0) - (a[1].no || 0))
-        .slice(0, 15);
+     function goCompletion() {
+     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+     document.getElementById('panel-complete').classList.add('active');
+     document.getElementById('progressBar').style.width = '100%';
+     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+     }
 
-        const noRows = noItems.map(([key, v]) => {
-            const label = document.querySelector(`input[name="${key}"]`)
-            ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
-            const pctNo = Math.round(((v.no || 0) / v.total) * 100);
-            return `<tr><td>${label}</td><td><span class="tag-no">NO: ${v.no} / ${v.total}</span></td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden"><div style="height:6px;background:var(--red);width:${pctNo}%;border-radius:3px"></div></div><span style="font-size:12px;font-weight:600;color:var(--red)">${pctNo}%</span></div></td></tr>`;
-        }).join('');
+     // ── DASHBOARD (lee de Google Sheets vía Apps Script) ──────────
+     async function loadDashboard() {
+     document.getElementById('db-loading').style.display = 'block';
+     document.getElementById('db-content').style.display = 'none';
+     document.getElementById('db-empty').style.display = 'none';
 
-        document.getElementById('db-table-wrap').innerHTML = `
- <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
- Hospitales participantes (${
-        allData.length})
- </h3><div style="overflow-x:auto;margin-bottom:32px"><table class="dashboard-table"><thead><tr><th>Hospital</th><th>CCAA</th><th>Tipo</th><th>Respuestas</th><th>Disponibilidad</th><th>Fecha</th></tr></thead><tbody>${rows}</tbody></table></div>
- ${noItems.length > 0 ? `
- <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
- Recursos con mayor tasa de NO disponibilidad
- </h3><div style="overflow-x:auto"><table class="dashboard-table"><thead><tr><th>Ítem</th><th>Centros sin disponibilidad</th><th>% hospitales</th></tr></thead><tbody>${
+     if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-empty').style.display = 'block';
+     document.getElementById('db-empty').innerHTML = `
+     <div style="font-size:48px;margin-bottom:16px">⚙️</div><p style="font-size:16px;font-weight:600;">Backend no configurado todavía</p><p style="font-size:14px;margin-top:8px;color:var(--gray-text)">Sigue las instrucciones del archivo README para conectar Google Sheets.</p>`;
+     return;
+     }
 
-        noRows}</tbody></table></div>` : ''}`;
+     try {
+     const resp = await fetch(SHEETS_URL + '?action=get');
+     const allData = await resp.json();
+     if (!allData || allData.length === 0) {
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-empty').style.display = 'block';
+     return;
+     }
+     renderDashboard(allData);
+     } catch(e) {
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-empty').innerHTML = `
+     <div style="font-size:48px;margin-bottom:16px">⚠️</div><p style="font-size:16px;">Error al cargar los datos</p><p style="font-size:13px;color:var(--gray-text);margin-top:6px">${e.message}</p>`;
+     document.getElementById('db-empty').style.display = 'block';
+     console.error(e);
+     }
+     }
 
-        document.getElementById('db-loading').style.display = 'none';
-        document.getElementById('db-content').style.display = 'block';
-    }
+     function renderDashboard(allData) {
+     const allItems = {};
+     allData.forEach(d => {
+     Object.entries(d.responses || {}).forEach(([key, val]) => {
+     if (!allItems[key]) allItems[key] = { si:0, no:0, np:0, total:0 };
+     allItems[key][val] = (allItems[key][val] || 0) + 1;
+     allItems[key].total++;
+     });
+     });
 
-    // ── DESCARGAS ────────────────────────────────────────────────
-    function downloadResults() {
-        const data = collectData();
-        let csv = 'Hospital;CCAA;Tipo;Item;Respuesta\n';
-        Object.entries(data.responses).forEach(([key, val]) => {
-            const label = document.querySelector(`input[name="${key}"]`)
-            ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
-            csv += `"${data.hospital}";"${data.ccaa}";"${data.tipo}";"${label}";"${val.toUpperCase()}"\n`;
-        });
-        _downloadCSV(csv, `encuesta_SEUP_${data.hospital.replace(/\s+/g, '_')}.csv`);
-    }
+     let totalSi = 0, totalNo = 0;
+     Object.values(allItems).forEach(v => { totalSi += v.si||0; totalNo += v.no||0; });
 
-    async function exportAllCSV() {
-        if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
-            alert('Configura el backend primero para exportar todos los datos.');
-            return;
-        }
-        try {
-            const resp = await fetch(SHEETS_URL + '?action=csv');
-            const csv = await resp.text();
-            _downloadCSV(csv, 'encuesta_SEUP_TODOS_LOS_HOSPITALES.csv');
-        } catch (e) {
-            alert('Error al exportar: ' + e.message);
-        }
-    }
+     document.getElementById('db-summary').innerHTML = `
+     <div class="summary-card"><div class="num" style="color:var(--navy)">${allData.length}</div><div class="lbl">Hospitales participantes</div></div><div class="summary-card"><div class="num num-si">${totalSi}</div><div class="lbl">Respuestas SÍ</div></div><div class="summary-card"><div class="num num-no">${totalNo}</div><div class="lbl">Respuestas NO</div></div>`;
 
-    function _downloadCSV(csv, filename) {
-        const blob = new Blob(['\uFEFF' + csv], {
-            type: 'text/csv;charset=utf-8;'
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-    }
+     const rows = allData.map(d => {
+     const total = Object.keys(d.responses || {}).length;
+     const si = Object.values(d.responses || {}).filter(v => v === 'si').length;
+     const no = Object.values(d.responses || {}).filter(v => v === 'no').length;
+     const pct = total > 0 ? Math.round((si/total)*100) : 0;
+     const date = d.timestamp ? new Date(d.timestamp).toLocaleDateString('es-ES') : '';
+     return `<tr><td><strong>${d.hospital||'—'}</strong></td><td>${d.ccaa||'—'}</td><td>${d.tipo ? d.tipo.split('/')[0].trim() : '—'}</td><td><span class="tag-si">SÍ ${si}</span><span class="tag-no">NO ${no}</span></td><td>${pct}% disponibilidad</td><td class="stat-mini">${date}</td></tr>`;
+     }).join('');
 
-    // Init
-    updateProgress();
+     const noItems = Object.entries(allItems)
+     .filter(([,v]) => (v.no||0) > 0)
+     .sort((a,b) => (b[1].no||0) - (a[1].no||0))
+     .slice(0, 15);
+
+     const noRows = noItems.map(([key, v]) => {
+     const label = document.querySelector(`input[name="${key}"]`)
+     ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
+     const pctNo = Math.round(((v.no||0)/v.total)*100);
+     return `<tr><td>${label}</td><td><span class="tag-no">NO: ${v.no} / ${v.total}</span></td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden"><div style="height:6px;background:var(--red);width:${pctNo}%;border-radius:3px"></div></div><span style="font-size:12px;font-weight:600;color:var(--red)">${pctNo}%</span></div></td></tr>`;
+     }).join('');
+
+     document.getElementById('db-table-wrap').innerHTML = `
+     <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
+     Hospitales participantes (${allData.length})
+     </h3><div style="overflow-x:auto;margin-bottom:32px"><table class="dashboard-table"><thead><tr><th>Hospital</th><th>CCAA</th><th>Tipo</th><th>Respuestas</th><th>Disponibilidad</th><th>Fecha</th></tr></thead><tbody>${rows}</tbody></table></div>
+     ${noItems.length > 0 ? `
+     <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
+     Recursos con mayor tasa de NO disponibilidad
+     </h3><div style="overflow-x:auto"><table class="dashboard-table"><thead><tr><th>Ítem</th><th>Centros sin disponibilidad</th><th>% hospitales</th></tr></thead><tbody>${noRows}</tbody></table></div>` : ''}`;
+
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-content').style.display = 'block';
+     }
+
+     // ── DESCARGAS ────────────────────────────────────────────────
+     function downloadResults() {
+     const data = collectData();
+     let csv = 'Hospital;CCAA;Tipo;Item;Respuesta\n';
+     Object.entries(data.responses).forEach(([key, val]) => {
+     const label = document.querySelector(`input[name="${key}"]`)
+     ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
+     csv += `"${data.hospital}";"${data.ccaa}";"${data.tipo}";"${label}";"${val.toUpperCase()}"\n`;
+     });
+     _downloadCSV(csv, `encuesta_SEUP_${data.hospital.replace(/\s+/g,'_')}.csv`);
+     }
+
+     async function exportAllCSV() {
+     if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+     alert('Configura el backend primero para exportar todos los datos.');
+     return;
+     }
+     try {
+     const resp = await fetch(SHEETS_URL + '?action=csv');
+     const csv = await resp.text();
+     _downloadCSV(csv, 'encuesta_SEUP_TODOS_LOS_HOSPITALES.csv');
+     } catch(e) {
+     alert('Error al exportar: ' + e.message);
+     }
+     }
+
+     function _downloadCSV(csv, filename) {
+     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+     const url = URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url; a.download = filename; a.click();
+     }
+
+     // Init
+     updateProgress();
     </script>
     <script>
     // Render all triple-check widgets
     document.querySelectorAll('.triple-check[data-n]').forEach(function(el) {
         var n = el.getAttribute('data-n');
+        var hasDD = el.getAttribute('data-dd') === '1';
         el.innerHTML = '<label class="check-option opt-si"><input type="radio" name="' + n + '" value="si"><div class="check-box">✓</div><span class="check-label">Sí</span></label>'
         + '<label class="check-option opt-no"><input type="radio" name="' + n + '" value="no"><div class="check-box">✗</div><span class="check-label">No</span></label>'
         + '<label class="check-option opt-np"><input type="radio" name="' + n + '" value="np"><div class="check-box">~</div><span class="check-label">N/P</span></label>';
+        if (hasDD) {
+            el.querySelectorAll('input[type=radio]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    var dd = document.getElementById('ms_' + n);
+                    if (dd) {
+                        dd.style.display = this.value === 'si' ? 'block' : 'none';
+                        if (this.value !== 'si') {
+                            dd.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+                                cb.checked = false;
+                            });
+                        }
+                    }
+                });
+            });
+        }
     });
     </script>
 </body>
