@@ -2665,265 +2665,261 @@
         </div>
     </main>
     <script>
-    // ══════════════════════════════════════════════════════════════
-    // CONFIGURACIÓN — Pega aquí tu URL de Google Apps Script
-    // (ver instrucciones en el archivo README_CONFIGURACION.txt)
-    // ══════════════════════════════════════════════════════════════
-    const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz3TobpZ_1gw_pleUPBGyLfSjZfwT-VSY9MjiUgn3UU_01P4yU0wOu6LcLW9GB16C732w/exec';
+     // ══════════════════════════════════════════════════════════════
+     // CONFIGURACIÓN — Pega aquí tu URL de Google Apps Script
+     // (ver instrucciones en el archivo README_CONFIGURACION.txt)
+     // ══════════════════════════════════════════════════════════════
+     const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz3TobpZ_1gw_pleUPBGyLfSjZfwT-VSY9MjiUgn3UU_01P4yU0wOu6LcLW9GB16C732w/exec';
 
-    let currentSection = 0;
-    const totalSections = 9;
+     let currentSection = 0;
+     const totalSections = 9;
 
-    function updateProgress() {
-        const pct = ((currentSection) / totalSections) * 100;
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.querySelectorAll('.tab-btn:not(.db-tab)').forEach((btn, i) => {
-            btn.classList.toggle('active', i === currentSection);
-        });
-        document.querySelector('.db-tab').classList.remove('active');
-        document.getElementById('mainLegend').style.display = 'flex';
-    }
+     function updateProgress() {
+     const pct = ((currentSection) / totalSections) * 100;
+     document.getElementById('progressBar').style.width = pct + '%';
+     document.querySelectorAll('.tab-btn:not(.db-tab)').forEach((btn, i) => {
+     btn.classList.toggle('active', i === currentSection);
+     });
+     document.querySelector('.db-tab').classList.remove('active');
+     document.getElementById('mainLegend').style.display = 'flex';
+     }
 
-    function goTo(index) {
-        document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('panel-' + index).classList.add('active');
-        currentSection = index;
-        updateProgress();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
+     function goTo(index) {
+     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+     document.getElementById('panel-' + index).classList.add('active');
+     currentSection = index;
+     updateProgress();
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+     }
 
-    function goToDb() {
-        document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('panel-db').classList.add('active');
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('.db-tab').classList.add('active');
-        document.getElementById('mainLegend').style.display = 'none';
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        loadDashboard();
-    }
+     function goToDb() {
+     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+     document.getElementById('panel-db').classList.add('active');
+     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+     document.querySelector('.db-tab').classList.add('active');
+     document.getElementById('mainLegend').style.display = 'none';
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+     loadDashboard();
+     }
 
-    function nextSection() {
-        if (currentSection < totalSections - 1)
-            goTo(currentSection + 1);
-    }
-    function prevSection() {
-        if (currentSection > 0)
-            goTo(currentSection - 1);
-    }
-
-    // ── RECOGER DATOS ─────────────────────────────────────────────
-    function collectData() {
-        const hospital = document.getElementById('hospitalName').value || 'Sin nombre';
-        const ccaa = document.getElementById('ccaa').value || '';
-        const tipo = document.getElementById('tipoCentro').value || '';
-        const volumen = document.getElementById('volumen').value || '';
-        const ucip = document.getElementById('ucip').value || '';
-
-        const responses = {};
-        document.querySelectorAll('.triple-check').forEach(tc => {
-            const checked = tc.querySelector('input[type="radio"]:checked');
-            if (checked)
-                responses[checked.name] = checked.value;
-        });
-
-        return {
-            hospital,
-            ccaa,
-            tipo,
-            volumen,
-            ucip,
-            timestamp: new Date().toISOString(),
-            responses
-        };
-    }
-
-    // ── ENVIAR A GOOGLE SHEETS ────────────────────────────────────
-    async function submitSurvey() {
-        const data = collectData();
-        const status = document.getElementById('saveStatus');
-        status.style.display = 'inline-flex';
-        status.className = 'save-status saving';
-        status.textContent = '💾 Enviando...';
-
-        if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
-            // Modo demo sin backend configurado
-            status.className = 'save-status error';
-            status.textContent = '⚠ Backend no configurado';
-            setTimeout(() => goCompletion(), 800);
-            return;
+     // ── VALIDACIÓN ────────────────────────────────────────────
+      function validateSection(index) {
+        var panel = document.getElementById('panel-' + index);
+        if (!panel) return {ok:true};
+        if (index === 0) {
+          var h = document.getElementById('hospitalName').value.trim();
+          var c = document.getElementById('ccaa').value;
+          var t = document.getElementById('tipoCentro').value;
+          if (!h) return {ok:false, msg:'⚠️ Introduce el nombre del hospital.'};
+          if (!c) return {ok:false, msg:'⚠️ Selecciona la Comunidad Autónoma.'};
+          if (!t) return {ok:false, msg:'⚠️ Selecciona el tipo de centro.'};
+          return {ok:true};
         }
-
-        try {
-            const resp = await fetch(SHEETS_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            status.className = 'save-status';
-            status.textContent = '✓ Guardado en Google Sheets';
-        } catch (e) {
-            status.className = 'save-status error';
-            status.textContent = '⚠ Error de conexión';
-            console.error(e);
+        var checks = panel.querySelectorAll('.triple-check');
+        var unanswered = [];
+        checks.forEach(function(tc){ if (!tc.querySelector('input[type="radio"]:checked')) unanswered.push(tc); });
+        if (unanswered.length > 0) {
+          checks.forEach(function(tc){ tc.closest('.item-row').style.cssText=''; });
+          unanswered.forEach(function(tc){ tc.closest('.item-row').style.background='rgba(229,57,53,0.08)'; tc.closest('.item-row').style.borderLeft='3px solid #e53935'; });
+          unanswered[0].closest('.item-row').scrollIntoView({behavior:'smooth',block:'center'});
+          return {ok:false, msg:'⚠️ Quedan '+unanswered.length+' pregunta'+(unanswered.length>1?'s':'')+' sin responder.'};
         }
-        goCompletion();
-    }
+        checks.forEach(function(tc){ tc.closest('.item-row').style.cssText=''; });
+        return {ok:true};
+      }
+      function showValError(msg) {
+        var e = document.getElementById('val-msg'); if(e) e.remove();
+        var d = document.createElement('div'); d.id='val-msg';
+        d.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#e53935;color:white;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(229,57,53,0.4)';
+        d.textContent=msg; document.body.appendChild(d);
+        setTimeout(function(){ if(d.parentNode) d.remove(); },3500);
+      }
+      function nextSection() {
+        var r=validateSection(currentSection); if(!r.ok){showValError(r.msg);return;}
+        if (currentSection < totalSections - 1) goTo(currentSection + 1);
+      }
+      function prevSection() {
+        if (currentSection > 0) goTo(currentSection - 1);
+      }tion > 0) goTo(currentSection - 1);
+     }
 
-    function goCompletion() {
-        document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('panel-complete').classList.add('active');
-        document.getElementById('progressBar').style.width = '100%';
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
+     // ── RECOGER DATOS ─────────────────────────────────────────────
+     function collectData() {
+     const hospital = document.getElementById('hospitalName').value || 'Sin nombre';
+     const ccaa = document.getElementById('ccaa').value || '';
+     const tipo = document.getElementById('tipoCentro').value || '';
+     const volumen = document.getElementById('volumen').value || '';
+     const ucip = document.getElementById('ucip').value || '';
 
-    // ── DASHBOARD (lee de Google Sheets vía Apps Script) ──────────
-    async function loadDashboard() {
-        document.getElementById('db-loading').style.display = 'block';
-        document.getElementById('db-content').style.display = 'none';
-        document.getElementById('db-empty').style.display = 'none';
+     const responses = {};
+     document.querySelectorAll('.triple-check').forEach(tc => {
+     const checked = tc.querySelector('input[type="radio"]:checked');
+     if (checked) responses[checked.name] = checked.value;
+     });
 
-        if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
-            document.getElementById('db-loading').style.display = 'none';
-            document.getElementById('db-empty').style.display = 'block';
-            document.getElementById('db-empty').innerHTML = `
- <div style="font-size:48px;margin-bottom:16px">⚙️</div><p style="font-size:16px;font-weight:600;">Backend no configurado todavía</p><p style="font-size:14px;margin-top:8px;color:var(--gray-text)">Sigue las instrucciones del archivo README para conectar Google Sheets.</p>`
-            ;
-            return;
-        }
+     return { hospital, ccaa, tipo, volumen, ucip, timestamp: new Date().toISOString(), responses };
+     }
 
-        try {
-            const resp = await fetch(SHEETS_URL + '?action=get');
-            const allData = await resp.json();
-            if (!allData || allData.length === 0) {
-                document.getElementById('db-loading').style.display = 'none';
-                document.getElementById('db-empty').style.display = 'block';
-                return;
-            }
-            renderDashboard(allData);
-        } catch (e) {
-            document.getElementById('db-loading').style.display = 'none';
-            document.getElementById('db-empty').innerHTML = `
- <div style="font-size:48px;margin-bottom:16px">⚠️</div><p style="font-size:16px;">Error al cargar los datos</p><p style="font-size:13px;color:var(--gray-text);margin-top:6px">${e.message}</p>`;
-            document.getElementById('db-empty').style.display = 'block';
-            console.error(e);
-        }
-    }
+     // ── ENVIAR A GOOGLE SHEETS ────────────────────────────────────
+     async function submitSurvey() {
+        var r = validateSection(currentSection);
+        if (!r.ok) { showValidationError(r.msg); return; }
+     const data = collectData();
+     const status = document.getElementById('saveStatus');
+     status.style.display = 'inline-flex';
+     status.className = 'save-status saving';
+     status.textContent = '💾 Enviando...';
 
-    function renderDashboard(allData) {
-        const allItems = {};
-        allData.forEach(d => {
-            Object.entries(d.responses || {}).forEach(([key, val]) => {
-                if (!allItems[key])
-                    allItems[key] = {
-                        si: 0,
-                        no: 0,
-                        np: 0,
-                        total: 0
-                    };
-                allItems[key][val] = (allItems[key][val] || 0) + 1;
-                allItems[key].total++;
-            });
-        });
+     if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+     // Modo demo sin backend configurado
+     status.className = 'save-status error';
+     status.textContent = '⚠ Backend no configurado';
+     setTimeout(() => goCompletion(), 800);
+     return;
+     }
 
-        let totalSi = 0,
-            totalNo = 0;
-        Object.values(allItems).forEach(v => {
-            totalSi += v.si || 0;
-            totalNo += v.no || 0;
-        });
+     try {
+     const resp = await fetch(SHEETS_URL, {
+     method: 'POST',
+     mode: 'no-cors',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify(data)
+     });
+     status.className = 'save-status';
+     status.textContent = '✓ Guardado en Google Sheets';
+     } catch(e) {
+     status.className = 'save-status error';
+     status.textContent = '⚠ Error de conexión';
+     console.error(e);
+     }
+     goCompletion();
+     }
 
-        document.getElementById('db-summary').innerHTML = `
- <div class="summary-card"><div class="num" style="color:var(--navy)">${allData.length}</div><div class="lbl">Hospitales participantes</div></div><div class="summary-card"><div class="num num-si">${totalSi}</div><div class="lbl">Respuestas SÍ</div></div><div class="summary-card"><div class="num num-no">${totalNo}</div><div class="lbl">Respuestas NO</div></div>`;
+     function goCompletion() {
+     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+     document.getElementById('panel-complete').classList.add('active');
+     document.getElementById('progressBar').style.width = '100%';
+     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+     }
 
-        const rows = allData.map(d => {
-            const total = Object.keys(d.responses || {}).length;
-            const si = Object.values(d.responses || {}).filter(v => v === 'si').length;
-            const no = Object.values(d.responses || {}).filter(v => v === 'no').length;
-            const pct = total > 0 ? Math.round((si / total) * 100) : 0;
-            const date = d.timestamp ? new Date(d.timestamp).toLocaleDateString('es-ES') : '';
-            return `<tr><td><strong>${d.hospital || '—'}</strong></td><td>${d.ccaa || '—'}</td><td>${d.tipo ? d.tipo.split('/')[0].trim() : '—'}</td><td><span class="tag-si">SÍ ${si}</span><span class="tag-no">NO ${no}</span></td><td>${pct}% disponibilidad</td><td class="stat-mini">${date}</td></tr>`;
-        }).join('');
+     // ── DASHBOARD (lee de Google Sheets vía Apps Script) ──────────
+     async function loadDashboard() {
+     document.getElementById('db-loading').style.display = 'block';
+     document.getElementById('db-content').style.display = 'none';
+     document.getElementById('db-empty').style.display = 'none';
 
-        const noItems = Object.entries(allItems)
-        .filter(([, v]) => (v.no || 0) > 0)
-        .sort((a, b) => (b[1].no || 0) - (a[1].no || 0))
-        .slice(0, 15);
+     if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-empty').style.display = 'block';
+     document.getElementById('db-empty').innerHTML = `
+     <div style="font-size:48px;margin-bottom:16px">⚙️</div><p style="font-size:16px;font-weight:600;">Backend no configurado todavía</p><p style="font-size:14px;margin-top:8px;color:var(--gray-text)">Sigue las instrucciones del archivo README para conectar Google Sheets.</p>`;
+     return;
+     }
 
-        const noRows = noItems.map(([key, v]) => {
-            const label = document.querySelector(`input[name="${key}"]`)
-            ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
-            const pctNo = Math.round(((v.no || 0) / v.total) * 100);
-            return `<tr><td>${label}</td><td><span class="tag-no">NO: ${v.no} / ${v.total}</span></td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden"><div style="height:6px;background:var(--red);width:${pctNo}%;border-radius:3px"></div></div><span style="font-size:12px;font-weight:600;color:var(--red)">${pctNo}%</span></div></td></tr>`;
-        }).join('');
+     try {
+     const resp = await fetch(SHEETS_URL + '?action=get');
+     const allData = await resp.json();
+     if (!allData || allData.length === 0) {
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-empty').style.display = 'block';
+     return;
+     }
+     renderDashboard(allData);
+     } catch(e) {
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-empty').innerHTML = `
+     <div style="font-size:48px;margin-bottom:16px">⚠️</div><p style="font-size:16px;">Error al cargar los datos</p><p style="font-size:13px;color:var(--gray-text);margin-top:6px">${e.message}</p>`;
+     document.getElementById('db-empty').style.display = 'block';
+     console.error(e);
+     }
+     }
 
-        document.getElementById('db-table-wrap').innerHTML = `
- <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
- Hospitales participantes (${
-        allData.length})
- </h3><div style="overflow-x:auto;margin-bottom:32px"><table class="dashboard-table"><thead><tr><th>Hospital</th><th>CCAA</th><th>Tipo</th><th>Respuestas</th><th>Disponibilidad</th><th>Fecha</th></tr></thead><tbody>${rows}</tbody></table></div>
- ${noItems.length > 0 ? `
- <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
- Recursos con mayor tasa de NO disponibilidad
- </h3><div style="overflow-x:auto"><table class="dashboard-table"><thead><tr><th>Ítem</th><th>Centros sin disponibilidad</th><th>% hospitales</th></tr></thead><tbody>${
+     function renderDashboard(allData) {
+     const allItems = {};
+     allData.forEach(d => {
+     Object.entries(d.responses || {}).forEach(([key, val]) => {
+     if (!allItems[key]) allItems[key] = { si:0, no:0, np:0, total:0 };
+     allItems[key][val] = (allItems[key][val] || 0) + 1;
+     allItems[key].total++;
+     });
+     });
 
-        noRows}</tbody></table></div>` : ''}`;
+     let totalSi = 0, totalNo = 0;
+     Object.values(allItems).forEach(v => { totalSi += v.si||0; totalNo += v.no||0; });
 
-        document.getElementById('db-loading').style.display = 'none';
-        document.getElementById('db-content').style.display = 'block';
-    }
+     document.getElementById('db-summary').innerHTML = `
+     <div class="summary-card"><div class="num" style="color:var(--navy)">${allData.length}</div><div class="lbl">Hospitales participantes</div></div><div class="summary-card"><div class="num num-si">${totalSi}</div><div class="lbl">Respuestas SÍ</div></div><div class="summary-card"><div class="num num-no">${totalNo}</div><div class="lbl">Respuestas NO</div></div>`;
 
-    // ── DESCARGAS ────────────────────────────────────────────────
-    function downloadResults() {
-        const data = collectData();
-        let csv = 'Hospital;CCAA;Tipo;Item;Respuesta\n';
-        Object.entries(data.responses).forEach(([key, val]) => {
-            const label = document.querySelector(`input[name="${key}"]`)
-            ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
-            csv += `"${data.hospital}";"${data.ccaa}";"${data.tipo}";"${label}";"${val.toUpperCase()}"\n`;
-        });
-        _downloadCSV(csv, `encuesta_SEUP_${data.hospital.replace(/\s+/g, '_')}.csv`);
-    }
+     const rows = allData.map(d => {
+     const total = Object.keys(d.responses || {}).length;
+     const si = Object.values(d.responses || {}).filter(v => v === 'si').length;
+     const no = Object.values(d.responses || {}).filter(v => v === 'no').length;
+     const pct = total > 0 ? Math.round((si/total)*100) : 0;
+     const date = d.timestamp ? new Date(d.timestamp).toLocaleDateString('es-ES') : '';
+     return `<tr><td><strong>${d.hospital||'—'}</strong></td><td>${d.ccaa||'—'}</td><td>${d.tipo ? d.tipo.split('/')[0].trim() : '—'}</td><td><span class="tag-si">SÍ ${si}</span><span class="tag-no">NO ${no}</span></td><td>${pct}% disponibilidad</td><td class="stat-mini">${date}</td></tr>`;
+     }).join('');
 
-    async function exportAllCSV() {
-        if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
-            alert('Configura el backend primero para exportar todos los datos.');
-            return;
-        }
-        try {
-            const resp = await fetch(SHEETS_URL + '?action=csv');
-            const csv = await resp.text();
-            _downloadCSV(csv, 'encuesta_SEUP_TODOS_LOS_HOSPITALES.csv');
-        } catch (e) {
-            alert('Error al exportar: ' + e.message);
-        }
-    }
+     const noItems = Object.entries(allItems)
+     .filter(([,v]) => (v.no||0) > 0)
+     .sort((a,b) => (b[1].no||0) - (a[1].no||0))
+     .slice(0, 15);
 
-    function _downloadCSV(csv, filename) {
-        const blob = new Blob(['\uFEFF' + csv], {
-            type: 'text/csv;charset=utf-8;'
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-    }
+     const noRows = noItems.map(([key, v]) => {
+     const label = document.querySelector(`input[name="${key}"]`)
+     ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
+     const pctNo = Math.round(((v.no||0)/v.total)*100);
+     return `<tr><td>${label}</td><td><span class="tag-no">NO: ${v.no} / ${v.total}</span></td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden"><div style="height:6px;background:var(--red);width:${pctNo}%;border-radius:3px"></div></div><span style="font-size:12px;font-weight:600;color:var(--red)">${pctNo}%</span></div></td></tr>`;
+     }).join('');
 
-    // Init
-    updateProgress();
+     document.getElementById('db-table-wrap').innerHTML = `
+     <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
+     Hospitales participantes (${allData.length})
+     </h3><div style="overflow-x:auto;margin-bottom:32px"><table class="dashboard-table"><thead><tr><th>Hospital</th><th>CCAA</th><th>Tipo</th><th>Respuestas</th><th>Disponibilidad</th><th>Fecha</th></tr></thead><tbody>${rows}</tbody></table></div>
+     ${noItems.length > 0 ? `
+     <h3 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px;color:var(--navy)">
+     Recursos con mayor tasa de NO disponibilidad
+     </h3><div style="overflow-x:auto"><table class="dashboard-table"><thead><tr><th>Ítem</th><th>Centros sin disponibilidad</th><th>% hospitales</th></tr></thead><tbody>${noRows}</tbody></table></div>` : ''}`;
+
+     document.getElementById('db-loading').style.display = 'none';
+     document.getElementById('db-content').style.display = 'block';
+     }
+
+     // ── DESCARGAS ────────────────────────────────────────────────
+     function downloadResults() {
+     const data = collectData();
+     let csv = 'Hospital;CCAA;Tipo;Item;Respuesta\n';
+     Object.entries(data.responses).forEach(([key, val]) => {
+     const label = document.querySelector(`input[name="${key}"]`)
+     ?.closest('.item-row')?.querySelector('.item-label')?.childNodes[0]?.textContent?.trim() || key;
+     csv += `"${data.hospital}";"${data.ccaa}";"${data.tipo}";"${label}";"${val.toUpperCase()}"\n`;
+     });
+     _downloadCSV(csv, `encuesta_SEUP_${data.hospital.replace(/\s+/g,'_')}.csv`);
+     }
+
+     async function exportAllCSV() {
+     if (SHEETS_URL === 'PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT') {
+     alert('Configura el backend primero para exportar todos los datos.');
+     return;
+     }
+     try {
+     const resp = await fetch(SHEETS_URL + '?action=csv');
+     const csv = await resp.text();
+     _downloadCSV(csv, 'encuesta_SEUP_TODOS_LOS_HOSPITALES.csv');
+     } catch(e) {
+     alert('Error al exportar: ' + e.message);
+     }
+     }
+
+     function _downloadCSV(csv, filename) {
+     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+     const url = URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url; a.download = filename; a.click();
+     }
+
+     // Init
+     updateProgress();
     </script>
     <script>
     // Render all triple-check widgets
